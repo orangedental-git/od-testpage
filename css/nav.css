@@ -1,0 +1,376 @@
+/* ═══════════════════════════════════════════════════════════
+   NAV.CSS — Glasmorphismus-Navbar (nach docs/nav.md)
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Outer wrapper ── */
+.nav-outer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 14px 20px 0;
+  pointer-events: none;
+}
+
+/* ── Glass navbar ── */
+.nav-glass {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 24px;
+  height: 56px;
+  pointer-events: auto;
+
+  /* Glasmorphismus */
+  background: rgba(15, 15, 15, 0.20);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+
+  /* Scroll transition */
+  transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.nav-glass.scrolled {
+  background: rgba(15, 15, 15, 0.35);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 4px 30px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* ── Logo ── */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  text-decoration: none;
+  margin-right: 16px;
+}
+
+.nav-logo img {
+  height: 28px;
+  width: auto;
+}
+
+.logo-fallback {
+  display: none;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #f0f0f0;
+  letter-spacing: -0.02em;
+}
+
+.logo-fallback span {
+  color: #f08319;
+}
+
+/* ── Desktop menu ── */
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-item > a,
+.nav-item > button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 14px;
+  border: none;
+  background: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: color 0.2s ease, background 0.2s ease;
+  white-space: nowrap;
+}
+
+.nav-item > a:hover,
+.nav-item > button:hover,
+.nav-item.open > button {
+  color: rgba(255, 255, 255, 1.0);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.chev {
+  font-size: 10px;
+  transition: transform 0.2s ease;
+}
+
+.nav-item.open .chev {
+  transform: rotate(180deg);
+}
+
+/* ── Hover bridge (::after) ── */
+.nav-item.has-dropdown::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background: transparent;
+  display: none;
+}
+
+.nav-item.has-dropdown.open::after {
+  display: block;
+}
+
+/* ── Standard Dropdown ── */
+.nav-drop {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  min-width: 220px;
+  padding: 8px;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+
+  /* Glass style */
+  background: rgba(15, 15, 15, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+}
+
+.nav-item.open > .nav-drop {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.nav-drop:not(.mega) a {
+  display: block;
+  padding: 10px 14px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 400;
+  border-radius: 8px;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.nav-drop:not(.mega) a:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ── Mega Menu ── */
+.nav-drop.mega {
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  width: max-content;
+  max-width: 900px;
+  padding: 20px 24px;
+}
+
+.nav-item.open > .nav-drop.mega {
+  transform: translateX(-50%) translateY(0);
+}
+
+.mega-body {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.mega-group {
+  min-width: 150px;
+}
+
+.mega-group-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #f08319;
+  padding: 4px 0 8px;
+  margin-bottom: 4px;
+}
+
+.mega-group-title-sep {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.mega-sub-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(240, 131, 25, 0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 8px 0 2px;
+}
+
+.mega-group a {
+  display: block;
+  padding: 5px 0 5px 8px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 400;
+  transition: color 0.15s ease;
+}
+
+.mega-group a:hover {
+  color: #fff;
+}
+
+/* ── Hamburger ── */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.hamburger span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ── Mobile overlay ── */
+.mobile-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 24px 40px;
+
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mobile-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.mob-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+.mob-links li {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.mobile-overlay.open .mob-links li {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger mobile links */
+.mobile-overlay.open .mob-links li:nth-child(1) { transition-delay: 0.05s; }
+.mobile-overlay.open .mob-links li:nth-child(2) { transition-delay: 0.08s; }
+.mobile-overlay.open .mob-links li:nth-child(3) { transition-delay: 0.11s; }
+.mobile-overlay.open .mob-links li:nth-child(4) { transition-delay: 0.14s; }
+.mobile-overlay.open .mob-links li:nth-child(5) { transition-delay: 0.17s; }
+.mobile-overlay.open .mob-links li:nth-child(6) { transition-delay: 0.20s; }
+.mobile-overlay.open .mob-links li:nth-child(7) { transition-delay: 0.23s; }
+.mobile-overlay.open .mob-links li:nth-child(8) { transition-delay: 0.26s; }
+.mobile-overlay.open .mob-links li:nth-child(9) { transition-delay: 0.29s; }
+.mobile-overlay.open .mob-links li:nth-child(10) { transition-delay: 0.32s; }
+
+.mob-links a {
+  display: block;
+  padding: 14px 0;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.mob-links a:hover {
+  color: #f08319;
+}
+
+/* ── Priority nav: hamburger shown by JS when items overflow ── */
+.hamburger.has-overflow {
+  display: flex;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .nav-glass {
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-outer {
+    padding: 8px 12px 0;
+  }
+
+  .nav-glass {
+    height: 50px;
+    padding: 0 14px;
+  }
+}
